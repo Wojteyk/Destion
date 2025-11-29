@@ -5,7 +5,7 @@
  *      Author: wojte
  */
 #include <stdlib.h>
-#include "lcd.h"
+#include "screen/lcd.h"
 #include "stm32f4xx_hal.h"
 #include "spi.h"
 

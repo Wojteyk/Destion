@@ -11,6 +11,7 @@
 #include <string.h>
 #include "lcd.h"
 #include "ui_hw.h"
+#include "time.h"
 
 #define BTN_DEFAULT_WIDTH      110
 #define BTN_DEFAULT_HEIGHT     25
@@ -159,4 +160,6 @@ void Ui_MoveActionDetected(uint8_t dirDown);
 void Ui_UpdateDHTData(float temperature, float humidity);
 
 void Ui_UpadatePcState(uint8_t pcState);
+
+void Ui_UpdateTime();
 

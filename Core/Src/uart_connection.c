@@ -6,7 +6,7 @@
  */
 #include "uart_connection.h"
 #include <stdio.h>
-#include "ui.h"
+#include "screen/ui.h"
 #include "usart.h"
 
 uint8_t transmit_it_flag = 0;
