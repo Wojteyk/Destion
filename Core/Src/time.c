@@ -5,6 +5,7 @@
  *      Author: wojte
  */
 #include "time.h"
+#include "screen/ui.h"
 
 RTC_TimeTypeDef sTime;
 RTC_DateTypeDef sDate;
@@ -20,4 +21,6 @@ void RTC_setTime(uint8_t hours, uint8_t minutes, uint8_t seconds)
 	sTime.Hours = hours;
 	sTime.Minutes = minutes;
 	sTime.Seconds = seconds;
+	HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+	Ui_UpdateTime();
 }
