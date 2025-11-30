@@ -279,12 +279,12 @@ static  Label_Dynamic sensorsLabelDynamic3 ={
 };
 
 static Button sensorsButton1 ={
-	.x = 120,
-	.y = 100,
+	.x = 130,
+	.y = 105,
 	.width = BTN_RETURN_WIDTH,
 	.height = BTN_RETURN_HEIGHT,
 	.radius = BTN_RETURN_RADIUS,
-	.text = "R",
+	.text = "~",
 	.textColor = BLACK,
 	.bgColor = BLUE,
 	.onClick = Action_SyncTime
