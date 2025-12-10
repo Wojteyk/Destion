@@ -4,7 +4,7 @@
  *  Created on: Oct 11, 2025
  *      Author: wojte
  */
-#include "ui_hw.h"
+#include "screen/ui_hw.h"
 
 void HW_setBacklightBrightness(uint8_t percentage)
 {

@@ -11,6 +11,7 @@
 #include <string.h>
 #include "lcd.h"
 #include "ui_hw.h"
+#include "time.h"
 
 #define BTN_DEFAULT_WIDTH      110
 #define BTN_DEFAULT_HEIGHT     25
@@ -146,7 +147,7 @@ void Ui_FSM_LongPressActionDetected();
 void Ui_MoveActionDetected(uint8_t dirDown);
 
 /**
- * @brief Update the UI with the latest DHT11 sensor readings.
+ * @brief Update the UI with the latest temp sensor readings.
  *
  * This function formats the temperature and humidity values into strings
  * and updates the corresponding dynamic labels on the sensors page.
@@ -156,7 +157,23 @@ void Ui_MoveActionDetected(uint8_t dirDown);
  * @param temperature The current temperature in Celsius.
  * @param humidity The current relative humidity in percent.
  */
-void Ui_UpdateDHTData(float temperature, float humidity);
+void Ui_UpdateTempData(float temperature, float humidity);
 
-void Ui_UpadatePcState(uint8_t pcState);
+/**
+ * @brief Updates the PC state information displayed on the User Interface.
+ * @details Updates the internal state variable and formats the display string
+ * ("On" or "Off"). If the Controls page is currently active, it redraws
+ * the specific dynamic label to reflect the change immediately.
+ *
+ * @param state The new PC state, where 0 represents OFF and non-zero represents ON.
+ */
+void Ui_UpdatePcState(uint8_t pcState);
+
+/**
+ * @brief Updates the system time displayed on the user interface.
+ * @details Formats the current time from the global structure into a string buffer.
+ * If the Sensors page is currently active, it specifically redraws the time label
+ * and refreshes the display to show the updated time.
+ */
+void Ui_UpdateTime(void);
 

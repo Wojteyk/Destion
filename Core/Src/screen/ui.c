@@ -4,7 +4,7 @@
  *  Created on: Oct 10, 2025
  *      Author: wojte
  */
-#include "ui.h"
+#include "screen/ui.h"
 #include "uart_connection.h"
 
 // --- Static Global Variables ---
@@ -21,21 +21,11 @@ static int currentBrightnesIndex = 0;
 static char bufTemperature[8] = "25.4";
 static char bufHumidity[8] = "30";
 static char bufPc[8] = "Off";
+static char bufTime[16] = "00::00::00";
 
 static uint8_t pcState = 0;
 
 //   ------- Function declarations ------
-
-/**
- * @brief Toggles the PC state between ON and OFF.
- *
- * This function is intended to be used as a callback for a button press.
- * When executed, it switches the PC state, updates the corresponding dynamic
- * label on the UI, and sends the new state over UART.
- *
- * @param self Pointer to the Button structure that triggered this action.
- */
-static void Action_TogglePc(Button *self);
 
 /**
  * @brief Draws a single button on the screen.
@@ -120,6 +110,27 @@ static void Action_ChangeTheme();
  * and calls the hardware abstraction layer to apply the new setting.
  */
 static void Action_ChangeBrightness();
+
+/**
+ * @brief Toggles the PC state between ON and OFF.
+ *
+ * This function is intended to be used as a callback for a button press.
+ * When executed, it switches the PC state, updates the corresponding dynamic
+ * label on the UI, and sends the new state over UART.
+ *
+ * @param self Pointer to the Button structure that triggered this action.
+ */
+static void Action_TogglePc(Button *self);
+
+/**
+ * @brief Initiates a time synchronization request with the host.
+ * @details This function is intended to be used as a callback for a button press
+ * (specifically the refresh button on the sensors page). It invokes
+ * `Uart_SynchronizeTime()` to query the current time via UART.
+ *
+ * @param self Pointer to the Button structure that triggered this action.
+ */
+static void Action_SyncTime(Button *self);
 
 //   ------- Brightness ------
 
@@ -219,7 +230,7 @@ const Page controlsPage = {
 static const Label_Const sensorsLabelConst1 ={
 		.x = 5,
 		.y = 15,
-		.text = "Temperatura",
+		.text = "Czas",
 		.textColor = WHITE,
 		.bgColor = BLACK,
 };
@@ -227,40 +238,72 @@ static const Label_Const sensorsLabelConst1 ={
 static const Label_Const sensorsLabelConst2 ={
 		.x = 5,
 		.y = 40,
+		.text = "Temperatura",
+		.textColor = WHITE,
+		.bgColor = BLACK,
+};
+
+static const Label_Const sensorsLabelConst3 ={
+		.x = 5,
+		.y = 65,
 		.text = "Wilgotnosc",
 		.textColor = WHITE,
 		.bgColor = BLACK,
 };
 
 static Label_Dynamic sensorsLabelDynamic1 ={
-		.x = 108,
+		.x = 60,
 		.y = 15,
+		.text = "1",
+		.textColor = WHITE,
+		.bgColor = BLACK,
+		.dataPtr = bufTime,
+};
+
+static  Label_Dynamic sensorsLabelDynamic2 ={
+		.x = 110,
+		.y = 40,
 		.text = "1",
 		.textColor = WHITE,
 		.bgColor = BLACK,
 		.dataPtr = bufTemperature,
 };
 
-static  Label_Dynamic sensorsLabelDynamic2 ={
-		.x = 105,
-		.y = 40,
+static  Label_Dynamic sensorsLabelDynamic3 ={
+		.x = 110,
+		.y = 65,
 		.text = "2",
 		.textColor = WHITE,
 		.bgColor = BLACK,
 		.dataPtr = bufHumidity,
 };
 
+static Button sensorsButton1 ={
+	.x = 130,
+	.y = 105,
+	.width = BTN_RETURN_WIDTH,
+	.height = BTN_RETURN_HEIGHT,
+	.radius = BTN_RETURN_RADIUS,
+	.text = "~",
+	.textColor = BLACK,
+	.bgColor = BLUE,
+	.onClick = Action_SyncTime
+};
+
 static const Label_Const* const sensorsLabelsConst[] = {
 	  &sensorsLabelConst1,
 	  &sensorsLabelConst2,
+	  &sensorsLabelConst3,
 };
 
 static Label_Dynamic* const sensorsLabelsDynamic[] = {
 	  &sensorsLabelDynamic1,
 	  &sensorsLabelDynamic2,
+	  &sensorsLabelDynamic3,
 };
 
 static Button* const sensorsButtons[] = {
+	  &sensorsButton1,
 	  &returnButton,
 };
 
@@ -408,6 +451,11 @@ static void Action_ChangeBrightness(Button *self)
 static void Action_TogglePc(Button *self)
 {
 	Uart_sendPcState(!pcState);
+}
+
+static void Action_SyncTime(Button *self)
+{
+	Uart_SynchronizeTime();
 }
 
 static void Action_ChangeTheme(Button *self)
@@ -567,19 +615,28 @@ void Ui_MoveHighlight(uint8_t dirDown)
     Ui_DrawPage();
 }
 
-void Ui_UpdateDHTData(float temperature, float humidity)
+void Ui_UpdateTime()
+{
+	snprintf(bufTime, sizeof(bufTime), "%02d::%02d::%02d", sTime.Hours, sTime.Minutes, sTime.Seconds);
+    if(currentPage == &sensorsPage){
+        Ui_DrawLabel_Dynamic(&sensorsLabelDynamic1);
+        lcdCopy();
+    }
+}
+
+void Ui_UpdateTempData(float temperature, float humidity)
 {
     snprintf(bufTemperature, sizeof(bufTemperature), "%.1fC", temperature);
     snprintf(bufHumidity, sizeof(bufHumidity), "%.1f%%", humidity);
 
     if(currentPage == &sensorsPage){
-        Ui_DrawLabel_Dynamic(&sensorsLabelDynamic1);
         Ui_DrawLabel_Dynamic(&sensorsLabelDynamic2);
+        Ui_DrawLabel_Dynamic(&sensorsLabelDynamic3);
         lcdCopy();
     }
 }
 
-void Ui_UpadatePcState(uint8_t state)
+void Ui_UpdatePcState(uint8_t state)
 {
 	pcState = state;
 	snprintf(bufPc, sizeof(bufPc), "%s", pcState ? "On " : "Off");

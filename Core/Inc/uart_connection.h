@@ -36,4 +36,18 @@ void Uart_parseData(char* line);
  */
 void Uart_sendPcState(uint8_t pcState);
 
-void Uart_synchornizePcState();
+/**
+ * @brief Requests the current PC state to synchronize status.
+ * @details This function initiates a non-blocking UART transmission sending
+ * a query command ("PC:?") to the host. It checks the internal busy flag
+ * to ensure no other transmission is currently in progress before sending.
+ */
+void Uart_synchornizePcState(void);
+
+/**
+ * @brief Requests the current system time from the host.
+ * @details This function initiates a non-blocking UART transmission sending
+ * a query command ("TIME:?") to the host. It utilizes HAL_UART_Transmit_IT
+ * and respects the internal transmission flag to prevent data collision.
+ */
+void Uart_SynchronizeTime(void);
