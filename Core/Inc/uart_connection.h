@@ -51,3 +51,5 @@ void Uart_synchornizePcState(void);
  * and respects the internal transmission flag to prevent data collision.
  */
 void Uart_SynchronizeTime(void);
+
+void Uart_sendLightState(uint8_t lightState);

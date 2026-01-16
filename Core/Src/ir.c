@@ -1,6 +1,5 @@
 #include "ir.h"
 #include "main.h"
-#include <stdbool.h>
 
 extern TIM_HandleTypeDef htim1;
 
@@ -31,6 +30,8 @@ static void space(uint16_t us);
 static void sendBit(uint8_t bit);
 
 static void sendDataSequence(const uint8_t* dataTosend);
+
+static void delay_us(uint32_t us);
 
 void mark(uint16_t us)
 {
@@ -68,7 +69,7 @@ void sendDataSequence(const uint8_t* dataTosend)
 	__enable_irq();
 }
 
-void IR_turnOnLight(bool value)
+void IR_turnOnLight(uint8_t value)
 {
     if(value)
     {

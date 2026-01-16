@@ -6,6 +6,7 @@
  */
 #include "screen/ui.h"
 #include "uart_connection.h"
+#include "ir.h"
 
 // --- Static Global Variables ---
 
@@ -24,6 +25,7 @@ static char bufPc[8] = "Off";
 static char bufTime[16] = "00::00::00";
 
 static uint8_t pcState = 0;
+static uint8_t lightState = 0;
 
 //   ------- Function declarations ------
 
@@ -122,6 +124,8 @@ static void Action_ChangeBrightness();
  */
 static void Action_TogglePc(Button *self);
 
+static void Action_ToggleLight(Button *self);
+
 /**
  * @brief Initiates a time synchronization request with the host.
  * @details This function is intended to be used as a callback for a button press
@@ -176,6 +180,14 @@ static const Label_Const controlsLabelConst1 ={
 		.bgColor = BLACK,
 };
 
+static const Label_Const controlsLabelConst2 ={
+		.x = 5,
+		.y = 65,
+		.text = "Swiatlo",
+		.textColor = WHITE,
+		.bgColor = BLACK,
+};
+
 static Label_Dynamic controlsLabelDynamic1 ={
 		.x = 108,
 		.y = 15,
@@ -197,8 +209,21 @@ static Button controlsButton1 ={
 	.onClick = Action_TogglePc
 };
 
+static Button controlsButton2 ={
+	.x = 25,
+	.y = 80,
+	.width = BTN_DEFAULT_WIDTH,
+	.height = BTN_DEFAULT_HEIGHT,
+	.radius = BTN_DEFAULT_RADIUS,
+	.text = "Przelacz",
+	.textColor = BLACK,
+	.bgColor = BLUE,
+	.onClick = Action_ToggleLight
+};
+
 static const Label_Const* const controlsLabelsConst[] = {
 	  &controlsLabelConst1,
+	  &controlsLabelConst2,
 };
 
 static Label_Dynamic* const controlsLabelsDynamic[] = {
@@ -207,6 +232,7 @@ static Label_Dynamic* const controlsLabelsDynamic[] = {
 
 static Button* const controlsButtons[] = {
 		&controlsButton1,
+		&controlsButton2,
 		&returnButton,
 };
 
@@ -453,6 +479,13 @@ static void Action_TogglePc(Button *self)
 	Uart_sendPcState(!pcState);
 }
 
+static void Action_ToggleLight(Button *self)
+{
+	lightState = !lightState;
+	IR_turnOnLight(lightState);
+	Uart_sendLightState(lightState);
+}
+
 static void Action_SyncTime(Button *self)
 {
 	Uart_SynchronizeTime();
@@ -644,6 +677,11 @@ void Ui_UpdatePcState(uint8_t state)
 		Ui_DrawLabel_Dynamic(&controlsLabelDynamic1);
 	    lcdCopy();
 	}
+}
+
+void Ui_UpadateLightState(uint8_t state)
+{
+	lightState = state;
 }
 
 void Ui_FSM_ShortPressActionDetected()

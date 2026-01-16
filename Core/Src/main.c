@@ -133,10 +133,10 @@ int main(void)
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
   while (1)
   {
-	  HAL_Delay(5000);
-	  IR_turnOnLight(1);
-	  HAL_Delay(5000);
-	  IR_turnOnLight(0);
+	  HAL_Delay(50);
+//	  IR_turnOnLight(1);
+//	  HAL_Delay(5000);
+//	  IR_turnOnLight(0);
 
     /* USER CODE END WHILE */
 

@@ -177,3 +177,4 @@ void Ui_UpdatePcState(uint8_t pcState);
  */
 void Ui_UpdateTime(void);
 
+void Ui_UpadateLightState(uint8_t lightState);
