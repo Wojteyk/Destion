@@ -32,6 +32,7 @@
 #include "fsm_controls.h"
 #include "uart_connection.h"
 #include "time.h"
+#include "ir.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -108,10 +109,18 @@ int main(void)
   MX_TIM11_Init();
   MX_USART1_UART_Init();
   MX_RTC_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
   HAL_TIM_PWM_Start(&htim10, TIM_CHANNEL_1);
+
   HAL_TIM_Encoder_Start(&htim5, TIM_CHANNEL_ALL);
   HAL_UART_Receive_IT(&huart1, (uint8_t*)&rxData, 1);
+
+  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; // Włącz śledzenie
+  DWT->CYCCNT = 0;                                // Reset licznika
+  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -124,8 +133,11 @@ int main(void)
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
   while (1)
   {
-	  HAL_Delay(500);
-	  //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+	  HAL_Delay(5000);
+	  IR_turnOnLight(1);
+	  HAL_Delay(5000);
+	  IR_turnOnLight(0);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
