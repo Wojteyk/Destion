@@ -177,4 +177,10 @@ void Ui_UpdatePcState(uint8_t pcState);
  */
 void Ui_UpdateTime(void);
 
+/**
+ * @brief Updates the light state information displayed on the User Interface.
+ * @details Updates the internal state variable.
+ *
+ * @param state The new light state, where 0 represents OFF and non-zero represents ON.
+ */
 void Ui_UpadateLightState(uint8_t lightState);

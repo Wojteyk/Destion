@@ -52,4 +52,12 @@ void Uart_synchornizePcState(void);
  */
 void Uart_SynchronizeTime(void);
 
+/**
+ * @brief Sends the current light state over UART.
+ * @details This function formats the light state as a string ("L:On" or "L:Off")
+ * and transmits it using HAL_UART_Transmit_IT. It will only start the transmission
+ * if no previous transmission is in progress.
+ *
+ * @param state The current L state, where 0 = Off, 1 = On.
+ */
 void Uart_sendLightState(uint8_t lightState);

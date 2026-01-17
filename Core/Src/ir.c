@@ -23,14 +23,72 @@ static const uint8_t IR_cmd_turn_off[] = {0, 0, 0, 0,
 
 static const size_t dataSize = 32;
 
+Here is your code with professional Doxygen-style comments added to the static function prototypes. I have also cleaned up the indentation slightly for better readability.
+C
+
+#include "ir.h"
+#include "main.h"
+
+extern TIM_HandleTypeDef htim1;
+
+static const uint8_t IR_cmd_turn_on[] = {0, 0, 0, 0,
+                                         0, 0, 0, 0,
+                                         1, 1, 1, 1,
+                                         0, 1, 1, 1,
+                                         0, 0, 0, 0,
+                                         0, 0, 0, 0,
+                                         1, 1, 1, 1,
+                                         1, 1, 1, 1};
+
+static const uint8_t IR_cmd_turn_off[] = {0, 0, 0, 0,
+                                          0, 0, 0, 0,
+                                          1, 1, 1, 1,
+                                          0, 1, 1, 1,
+                                          1, 0, 0, 0,
+                                          0, 0, 0, 0,
+                                          0, 1, 1, 1,
+                                          1, 1, 1, 1};                                      
+
+static const size_t dataSize = 32;
+
+/* --- Static Function Prototypes --- */
+
+/**
+ * @brief Generates the 38kHz carrier signal (Mark) for a specific duration.
+ * * Sets the PWM duty cycle to ~33% (Compare value 730) to generate the IR burst.
+ * * @param us Duration in microseconds.
+ */
 static void mark(uint16_t us);
 
+/**
+ * @brief Generates a Space (silence) for a specific duration.
+ * * Sets the PWM duty cycle to 0% to stop the IR transmission.
+ * * @param us Duration in microseconds.
+ */
 static void space(uint16_t us);
 
+/**
+ * @brief Transmits a single bit according to the NEC protocol timing.
+ * * - Logic '1': 560us Mark + 1690us Space
+ * - Logic '0': 560us Mark + 560us Space
+ * * @param bit The bit value to send (0 or 1).
+ */
 static void sendBit(uint8_t bit);
 
+/**
+ * @brief Sends the entire IR data packet (Header + Data + Stop bit).
+ * * This function enters a critical section (disables interrupts) to ensure
+ * precise timing required by the IR protocol.
+ * * @param dataTosend Pointer to the array of bits (0s and 1s) to transmit.
+ */
 static void sendDataSequence(const uint8_t* dataTosend);
 
+/**
+ * @brief Provides a blocking delay in microseconds with high precision.
+ * * Uses the DWT Cycle Counter (Data Watchpoint and Trace). 
+ * Ensure DWT is initialized in main.c before using this.
+ * * @param us Number of microseconds to wait.
+ */
 static void delay_us(uint32_t us);
 
 void mark(uint16_t us)
