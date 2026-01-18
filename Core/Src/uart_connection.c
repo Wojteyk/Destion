@@ -8,12 +8,14 @@
 #include <stdio.h>
 #include "screen/ui.h"
 #include "usart.h"
+#include "ir.h"
 
 uint8_t transmit_it_flag = 0;
 
 static float temperature = 0;
 static float humidity = 0;
 static uint8_t pcState = 0;
+static uint8_t lightState = 0;
 static char txData[16];
 
 void Uart_parseData(char* line){
@@ -34,6 +36,11 @@ void Uart_parseData(char* line){
 		minutes = (uint8_t)m_temp;
 		seconds = (uint8_t)s_temp;
 		RTC_setTime(hours, minutes, seconds);
+	}
+	else if(sscanf(line, "L:%hhu", &lightState) == 1)
+	{
+		Ui_UpadateLightState(lightState);
+		IR_turnOnLight(lightState);
 	}
 }
 
@@ -66,3 +73,14 @@ void Uart_SynchronizeTime()
 		HAL_UART_Transmit_IT(&huart1, (uint8_t*)txData, strlen(txData));
 	}
 }
+
+void Uart_sendLightState(uint8_t lightState)
+{
+	snprintf(txData, sizeof(txData), "L:%s\r\n", lightState ? "On" : "Off");
+
+	if(!transmit_it_flag){
+		transmit_it_flag = 1;
+		HAL_UART_Transmit_IT(&huart1, (uint8_t*)txData, strlen(txData));
+	}
+}
+
