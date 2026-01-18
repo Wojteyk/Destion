@@ -135,7 +135,7 @@ This project communicates with the **ESP32 WiFi Configuration Module** through U
   - ESP32 sends cloud commands/updates to Destion
   - Destion syncs RTC with ESP32 time data
 
-For detailed communication specifications, see the [ESP32 WiFi Configuration README](https://github.com/Wojteyk/Destion_esp32_firmware).
+For detailed communication specifications, see the [ESP32 WiFi README](https://github.com/Wojteyk/Destion_esp32_firmware).
 
 ## Related Projects
 
