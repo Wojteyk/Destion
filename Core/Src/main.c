@@ -118,8 +118,8 @@ int main(void)
   HAL_TIM_Encoder_Start(&htim5, TIM_CHANNEL_ALL);
   HAL_UART_Receive_IT(&huart1, (uint8_t*)&rxData, 1);
 
-  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk; // Włącz śledzenie
-  DWT->CYCCNT = 0;                                // Reset licznika
+  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+  DWT->CYCCNT = 0;
   DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
   /* USER CODE END 2 */
 

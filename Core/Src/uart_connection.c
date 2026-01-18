@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "screen/ui.h"
 #include "usart.h"
+#include "ir.h"
 
 uint8_t transmit_it_flag = 0;
 
@@ -39,6 +40,7 @@ void Uart_parseData(char* line){
 	else if(sscanf(line, "L:%hhu", &lightState) == 1)
 	{
 		Ui_UpadateLightState(lightState);
+		IR_turnOnLight(lightState);
 	}
 }
 

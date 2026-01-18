@@ -23,34 +23,6 @@ static const uint8_t IR_cmd_turn_off[] = {0, 0, 0, 0,
 
 static const size_t dataSize = 32;
 
-Here is your code with professional Doxygen-style comments added to the static function prototypes. I have also cleaned up the indentation slightly for better readability.
-C
-
-#include "ir.h"
-#include "main.h"
-
-extern TIM_HandleTypeDef htim1;
-
-static const uint8_t IR_cmd_turn_on[] = {0, 0, 0, 0,
-                                         0, 0, 0, 0,
-                                         1, 1, 1, 1,
-                                         0, 1, 1, 1,
-                                         0, 0, 0, 0,
-                                         0, 0, 0, 0,
-                                         1, 1, 1, 1,
-                                         1, 1, 1, 1};
-
-static const uint8_t IR_cmd_turn_off[] = {0, 0, 0, 0,
-                                          0, 0, 0, 0,
-                                          1, 1, 1, 1,
-                                          0, 1, 1, 1,
-                                          1, 0, 0, 0,
-                                          0, 0, 0, 0,
-                                          0, 1, 1, 1,
-                                          1, 1, 1, 1};                                      
-
-static const size_t dataSize = 32;
-
 /* --- Static Function Prototypes --- */
 
 /**
