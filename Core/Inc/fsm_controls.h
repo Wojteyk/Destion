@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-#include "ui.h"
-#include "ui_hw.h"
+#include "screen/ui.h"
+#include "screen/ui_hw.h"
 
 #define DEBOUNCE_ENCODER_TIME_MS 100
 

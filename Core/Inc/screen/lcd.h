@@ -12,7 +12,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <font.h>
+#include <screen/font.h>
 
 /**
  * @brief Flag indicating whether a DMA transfer is in progress.
